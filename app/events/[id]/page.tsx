@@ -8,34 +8,63 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { getEventById, getUserById } from "@/lib/db"
 import { notFound } from "next/navigation"
 import { formatDate } from "@/lib/utils"
+import { cookies } from "next/headers"
+import { verify } from "jsonwebtoken"
+import authConfig from "@/config/auth.json"
+import dynamic from "next/dynamic"
+import { use } from "react"
+
+
+const JoinEventButton = dynamic(() => import("@/components/JoinEventButton"), { ssr: false })
+
+const JWT_SECRET = authConfig.jwtSecret || process.env.JWT_SECRET || "your-secret-key"
 
 export default async function EventDetailPage({ params }: { params: { id: string } }) {
-  // Fetch the event data from the database
   const eventId = params.id
   const event = await getEventById(eventId)
   
-  // If event not found, show 404 page
   if (!event) {
     notFound()
   }
   
-  // Fetch organizer data
   const organizer = event.organizerId ? await getUserById(event.organizerId) : null
   
-  // Fetch attendees data (first 6)
   const attendeePromises = event.participants 
     ? event.participants.slice(0, 6).map((userId: string) => getUserById(userId))
     : []
   const attendees = await Promise.all(attendeePromises)
   
-  // Format date and time
   const eventDate = event.date ? new Date(event.date) : null
   const formattedDate = eventDate ? formatDate(eventDate, "EEE, MMM d, yyyy") : "Date not specified"
+
+  let currentUser = null
+  let userId: string | undefined = undefined
+  
+  const cookieStore = use(cookies())
+  const authCookie = cookieStore.get("auth-token")
+  const token = authCookie?.value || ""
+    
+  if (token) {
+    try {
+      const decoded = verify(token, JWT_SECRET) as { userId: string }
+      userId = decoded.userId
+      currentUser = await getUserById(userId)
+    } catch (error) {
+      console.error("Error verifying token:", error)
+    }
+  }
+  
+  const isParticipant = event.participants && userId
+    ? event.participants.includes(userId)
+    : false
+  
+  const isFull = event.maxParticipants > 0 && 
+    event.participants && 
+    event.participants.length >= event.maxParticipants
 
   return (
     <div className="container py-8 md:py-12">
       <div className="flex flex-col gap-8">
-        {/* Back button */}
         <div>
           <Link href="/events">
             <Button variant="ghost" className="flex items-center gap-2 p-0 hover:bg-transparent">
@@ -45,7 +74,6 @@ export default async function EventDetailPage({ params }: { params: { id: string
           </Link>
         </div>
 
-        {/* Event header */}
         <div className="relative h-[300px] md:h-[400px] w-full overflow-hidden rounded-xl">
           <Image 
             src={event.image || "/placeholder.svg?height=400&width=800"} 
@@ -61,7 +89,6 @@ export default async function EventDetailPage({ params }: { params: { id: string
           </div>
         </div>
 
-        {/* Event details */}
         <div className="grid gap-8 md:grid-cols-[2fr_1fr]">
           <div className="space-y-6">
             <div className="space-y-2">
@@ -179,14 +206,12 @@ export default async function EventDetailPage({ params }: { params: { id: string
                 <Badge 
                   variant="outline" 
                   className={
-                    event.maxParticipants && event.participants && event.participants.length >= event.maxParticipants
+                    isFull
                       ? "text-red-600 bg-red-50"
                       : "text-green-600 bg-green-50"
                   }
                 >
-                  {event.maxParticipants && event.participants && event.participants.length >= event.maxParticipants
-                    ? "Full"
-                    : "Open"}
+                  {isFull ? "Full" : "Open"}
                 </Badge>
               </div>
               <div className="mt-4 space-y-4">
@@ -202,12 +227,14 @@ export default async function EventDetailPage({ params }: { params: { id: string
                       : "Unlimited"}
                   </span>
                 </div>
-                <Button 
-                  className="w-full"
-                  disabled={event.maxParticipants && event.participants && event.participants.length >= event.maxParticipants}
-                >
-                  Join Event
-                </Button>
+                
+                <JoinEventButton 
+                  eventId={eventId}
+                  isFull={isFull}
+                  isParticipant={isParticipant}
+                  userId={userId}
+                />
+                
               </div>
             </div>
 

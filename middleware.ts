@@ -20,7 +20,6 @@ export function middleware(request: NextRequest) {
     path.startsWith("/_next/") ||
     path.startsWith("/static/") ||
     path.startsWith("/events") ||
-    path.startsWith("/players") ||
     path.startsWith("/esports") ||
     path.includes(".")
 
@@ -31,7 +30,6 @@ export function middleware(request: NextRequest) {
 
   // Protected paths that require authentication
   const protectedPaths = [
-    "/profile",
     "/profile/edit",
     "/teams/create",
   ]

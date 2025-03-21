@@ -12,12 +12,10 @@ export default async function TournamentsPage({
 }: {
   searchParams: { [key: string]: string | string[] | undefined }
 }) {
-  // Parse search parameters
   const page = typeof searchParams.page === 'string' ? parseInt(searchParams.page) : 1
   const limit = 9
   const skip = (page - 1) * limit
   
-  // Build filter based on search parameters
   const filter: any = {}
   
   if (searchParams.game) {
@@ -40,19 +38,15 @@ export default async function TournamentsPage({
     filter.registrationOpen = false
   }
   
-  // Fetch tournaments with pagination and filtering
   const tournaments = await getTournaments(limit, skip, filter)
   
-  // Fetch total count for pagination
-  const totalTournaments = tournaments.length // In a real app, you would get the total count from the database
+  const totalTournaments = tournaments.length
   const totalPages = Math.ceil(totalTournaments / limit)
   
-  // Fetch games for filter dropdown
   const games = await getGames(100, 0)
   
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
       <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -79,7 +73,6 @@ export default async function TournamentsPage({
         </div>
       </section>
 
-      {/* Filters Section */}
       <section className="w-full py-6 md:py-8 border-b">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -154,7 +147,6 @@ export default async function TournamentsPage({
         </div>
       </section>
 
-      {/* Tournaments List */}
       <section className="w-full py-12 md:py-24">
         <div className="container px-4 md:px-6">
           <div className="flex items-center justify-between mb-8">
@@ -243,7 +235,6 @@ export default async function TournamentsPage({
             </div>
           )}
           
-          {/* Pagination */}
           {tournaments.length > 0 && totalPages > 1 && (
             <div className="flex justify-center mt-8">
               <div className="flex items-center space-x-2">
@@ -252,7 +243,6 @@ export default async function TournamentsPage({
                   size="sm"
                   disabled={page <= 1}
                   onClick={() => {
-                    // This would be handled by client-side navigation in a real app
                   }}
                 >
                   Previous
@@ -265,7 +255,6 @@ export default async function TournamentsPage({
                       size="sm"
                       className="w-8 h-8 p-0"
                       onClick={() => {
-                        // This would be handled by client-side navigation in a real app
                       }}
                     >
                       {pageNum}
@@ -277,7 +266,6 @@ export default async function TournamentsPage({
                   size="sm"
                   disabled={page >= totalPages}
                   onClick={() => {
-                    // This would be handled by client-side navigation in a real app
                   }}
                 >
                   Next
@@ -288,7 +276,6 @@ export default async function TournamentsPage({
         </div>
       </section>
       
-      {/* CTA Section */}
       <section className="w-full py-12 md:py-24 bg-muted">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -316,4 +303,4 @@ export default async function TournamentsPage({
       </section>
     </div>
   )
-} 
+}

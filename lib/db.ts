@@ -1,5 +1,6 @@
 import clientPromise from "./mongodb"
 import { ObjectId } from "mongodb"
+import { demoGames } from "./demoData"
 
 // Database Name
 const dbName = "athleteverse"
@@ -234,6 +235,15 @@ export async function leaveEvent(eventId: string, userId: string) {
 // Game operations
 export async function getGames(limit = 10, skip = 0, filter = {}) {
   try {
+    // If we're using mock data, return demo games
+    if (useMockData || process.env.NODE_ENV === "development") {
+      const filteredGames = demoGames.filter(game => {
+        // Apply filter logic if needed
+        return true;
+      });
+      return filteredGames.slice(skip, skip + limit);
+    }
+    
     const games = await getCollection("games")
     return games.find(filter).sort({ title: 1 }).skip(skip).limit(limit).toArray()
   } catch (error) {
@@ -244,6 +254,11 @@ export async function getGames(limit = 10, skip = 0, filter = {}) {
 
 export async function getGameById(id: string) {
   try {
+    // If we're using mock data, return a demo game
+    if (useMockData || process.env.NODE_ENV === "development") {
+      return demoGames.find(game => game._id.toString() === id);
+    }
+    
     const games = await getCollection("games")
     return games.findOne({ _id: new ObjectId(id) })
   } catch (error) {
@@ -254,6 +269,14 @@ export async function getGameById(id: string) {
 
 export async function getGamesByCategory(category: string, limit = 10, skip = 0) {
   try {
+    // If we're using mock data, return demo games filtered by category
+    if (useMockData || process.env.NODE_ENV === "development") {
+      const filteredGames = demoGames.filter(game => game.category === category);
+      // Sort by active players in descending order
+      const sortedGames = filteredGames.sort((a, b) => b.activePlayers - a.activePlayers);
+      return sortedGames.slice(skip, skip + limit);
+    }
+    
     const games = await getCollection("games")
     return games.find({ category }).sort({ activePlayers: -1 }).skip(skip).limit(limit).toArray()
   } catch (error) {

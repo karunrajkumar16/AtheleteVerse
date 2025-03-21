@@ -10,32 +10,26 @@ import { notFound } from "next/navigation"
 import { formatDate } from "@/lib/utils"
 
 export default async function PlayerDetailPage({ params }: { params: { id: string } }) {
-  // Fetch the user data from the database
   const userId = params.id
   const user = await getUserById(userId)
   
-  // If user not found, show 404 page
   if (!user) {
     notFound()
   }
   
-  // Fetch user's events if they have joined any
   let userEvents: any[] = []
   if (user.eventsJoined && user.eventsJoined.length > 0) {
-    // In a real app, you would use a more efficient query to get events by IDs
     const allEvents = await getEvents(100, 0, { date: { $gte: new Date() } })
     userEvents = allEvents.filter(event => 
       user.eventsJoined.some((eventId: string) => event._id.toString() === eventId)
-    ).slice(0, 2) // Just show the first 2 for simplicity
+    ).slice(0, 2)
   }
   
-  // Format the member since date
   const memberSince = user.createdAt ? formatDate(new Date(user.createdAt), "MMMM yyyy") : "Unknown"
   
   return (
     <div className="container py-8 md:py-12">
       <div className="flex flex-col gap-8">
-        {/* Back button */}
         <div>
           <Link href="/players">
             <Button variant="ghost" className="flex items-center gap-2 p-0 hover:bg-transparent">
@@ -45,7 +39,6 @@ export default async function PlayerDetailPage({ params }: { params: { id: strin
           </Link>
         </div>
 
-        {/* Player header */}
         <div className="flex flex-col gap-6 md:flex-row md:items-start">
           <div className="relative h-32 w-32 md:h-48 md:w-48">
             <Image
@@ -104,7 +97,6 @@ export default async function PlayerDetailPage({ params }: { params: { id: strin
           </div>
         </div>
 
-        {/* Player details */}
         <Tabs defaultValue="sports">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="sports">Sports</TabsTrigger>
@@ -113,7 +105,6 @@ export default async function PlayerDetailPage({ params }: { params: { id: strin
             <TabsTrigger value="reviews">Reviews</TabsTrigger>
           </TabsList>
 
-          {/* Sports Tab */}
           <TabsContent value="sports" className="mt-6">
             {user.skillLevels && user.skillLevels.length > 0 ? (
               <div className="grid gap-6 md:grid-cols-2">
@@ -158,7 +149,6 @@ export default async function PlayerDetailPage({ params }: { params: { id: strin
             )}
           </TabsContent>
 
-          {/* Events & Teams Tab */}
           <TabsContent value="events" className="mt-6">
             <div className="grid gap-6 md:grid-cols-2">
               <Card>
@@ -219,7 +209,6 @@ export default async function PlayerDetailPage({ params }: { params: { id: strin
             </div>
           </TabsContent>
 
-          {/* eSports Tab */}
           <TabsContent value="esports" className="mt-6">
             {user.games && user.games.length > 0 ? (
               <div className="grid gap-6 md:grid-cols-2">
@@ -253,7 +242,6 @@ export default async function PlayerDetailPage({ params }: { params: { id: strin
             )}
           </TabsContent>
 
-          {/* Reviews Tab */}
           <TabsContent value="reviews" className="mt-6">
             {user.reviews && user.reviews.length > 0 ? (
               <div className="space-y-6">

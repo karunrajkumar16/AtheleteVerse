@@ -57,8 +57,8 @@ export default async function EventsPage({ searchParams }: { searchParams: { [ke
                 <SelectContent>
                   <SelectItem value="all">All Sports</SelectItem>
                   <SelectItem value="basketball">Basketball</SelectItem>
-                  <SelectItem value="soccer">Soccer</SelectItem>
-                  <SelectItem value="tennis">Tennis</SelectItem>
+                  <SelectItem value="soccer">cricket</SelectItem>
+                  <SelectItem value="tennis">Batmantion</SelectItem>
                   <SelectItem value="volleyball">Volleyball</SelectItem>
                   <SelectItem value="running">Running</SelectItem>
                 </SelectContent>
