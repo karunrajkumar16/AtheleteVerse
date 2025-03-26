@@ -11,11 +11,8 @@ import { formatDate } from "@/lib/utils"
 import { cookies } from "next/headers"
 import { verify } from "jsonwebtoken"
 import authConfig from "@/config/auth.json"
-import dynamic from "next/dynamic"
 import { use } from "react"
-
-
-const JoinEventButton = dynamic(() => import("@/components/JoinEventButton"), { ssr: false })
+import JoinEventButton from "@/components/JoinEventButton"
 
 const JWT_SECRET = authConfig.jwtSecret || process.env.JWT_SECRET || "your-secret-key"
 

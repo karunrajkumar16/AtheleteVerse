@@ -125,4 +125,4 @@ export default function JoinEventButton({
       {isLoading ? "Processing..." : "Join Event"}
     </Button>
   )
-} 
+}
