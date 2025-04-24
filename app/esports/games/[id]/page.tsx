@@ -9,6 +9,7 @@ import { Gamepad2, Calendar, Users, Trophy, ArrowRight, Star, Clock } from "luci
 import { getGameById, getTournamentsByGame } from "@/lib/db"
 import { formatDate } from "@/lib/utils"
 
+
 export default async function GameDetailPage({ params }: { params: { id: string } }) {
   // Fetch game data
   const game = await getGameById(params.id)

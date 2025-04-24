@@ -94,4 +94,3 @@ export default function ImageUpload({ onImageUploaded, defaultImage, className }
     </div>
   )
 }
-

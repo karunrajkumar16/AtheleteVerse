@@ -2,7 +2,6 @@ import clientPromise from "./mongodb"
 import { ObjectId } from "mongodb"
 
 const dbName = "athleteverse"
-
 export async function getDb() {
   try {
     const client = await clientPromise
@@ -502,4 +501,3 @@ export async function getUserParticipationHistory(userId: string) {
     }
   }
 }
-

@@ -13,6 +13,8 @@ export default async function EventsPage({ searchParams }: { searchParams: { [ke
   const limit = 9
   const skip = (page - 1) * limit
   
+
+  
   // Build filter based on search parameters
   const filter: any = {}
   

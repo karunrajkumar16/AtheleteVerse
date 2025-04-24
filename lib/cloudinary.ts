@@ -66,4 +66,3 @@ export async function deleteImage(publicId: string) {
 }
 
 export default cloudinary
-

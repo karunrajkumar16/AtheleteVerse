@@ -242,4 +242,3 @@ export default async function PlayersPage({ searchParams }: { searchParams: { [k
     </div>
   )
 }
-

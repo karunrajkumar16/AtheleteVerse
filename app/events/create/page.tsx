@@ -192,7 +192,8 @@ export default function CreateEventPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="Basketball">Basketball</SelectItem>
-                      <SelectItem value="Soccer">Cricket</SelectItem>
+                      <SelectItem value="Soccer">Football</SelectItem>
+                      <SelectItem value="Cricket">Cricket</SelectItem>
                       <SelectItem value="Tennis">Tennis</SelectItem>
                       <SelectItem value="Volleyball">Volleyball</SelectItem>
                       <SelectItem value="Running">Running</SelectItem>
