@@ -55,12 +55,6 @@ scalability, responsiveness, and performance across devices.
   <li>📊 Scalable API architecture using Next.js API routes</li>
 </ul>
 
-<h2>🌐 Live Application</h2>
-<p>
-<a href="https://athelete-verse.vercel.app" target="_blank">
-https://athelete-verse.vercel.app
-</a>
-</p>
 
 <h2>🚀 Deployment</h2>
 <p>
